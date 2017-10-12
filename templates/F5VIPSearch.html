@@ -1,0 +1,98 @@
+Content-Type: text/html
+
+<!DOCTYPE html PUBLIC  "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="htttp://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>IP Services Search Tool</title>
+    <link rel="stylesheet" href="../REPORTS/css/table_new.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script>
+      function noRes(){
+        alert("No results for today. Please notify US Networks.");
+      }
+    </script>
+  </head>
+    <body>
+      <table>
+        <tr><td id="main">
+          <h1 style = "text-align:center;">F5 VIP Search Tool </h1>
+          <h3 style = "text-align:center;">Built by Network Services</h3>
+          </br></br>
+          <form name = "VIPSearch" action = 'F5VIPSearch.cgi' method = "post">
+            <table cellspacing = "0" border = "0">
+              <tr>
+                <td>Virtual Server IP:</td>
+                <td><input id="vServer_ip" name = "vServer_ip" type = "text" placeholder="xxx.xxx.xxx.xxx"></td>
+                <td>Virtual Server Name:</td>
+                <td><input id="vServer_name" name = "vServer_name" type = "text"></td>
+              </tr>
+              <tr>
+                <td>Pool IP:</td>
+                <td><input id="member_ip" name = "member_ip" type = "text" placeholder="xxx.xxx.xxx.xxx"></td>
+                <td>Pool Name:</td>
+                <td><input id="member_name" name="member_name" type="text"></td>
+              </tr><tr>
+                <td>Virtual Port:</td>
+                <td><input id="vServer_port" name="vServer_port" type="text"></td>
+              <tr>
+                <td><input value="Search" type="submit"></td>
+              </tr>
+            </table>
+            {% if is_search %}
+            </br>
+            <table id="chart">
+              <tr>
+                <th>Hostname</th>
+                <th>Virtual IP</th>
+                <th>Virtual Server Name</th>
+                <th>Virtual Port</th>
+                <th>Pool Member IP</th>
+                <th>Pool Name</th>
+                <th>Internet NATs</th>
+                <th>Dealer NATs</th>
+                <th>DNS</th>
+              </tr>
+              {% for data in result["data"] %}
+              <tr>
+                <td>{{data['hostname']}}</td>
+                <td>{{data['vServer_ip']}}</td>
+                <td>{{data['vServer_name']}}</td>
+                <td>{{data['vServer_port']}}</td>
+                <td>{{data['member_ip']}}</td>
+                <td>{{data['member_name']}}</td>
+                <td>
+                  {% if data['iNAT'] %}
+                      {% for item in data['iNAT'] %}
+                          {{ item[0] }}
+                      {% endfor %}
+                  {% else %}
+                      Null
+                  {% endif %}
+
+                </td>
+                <td>
+                  {% if data['dNAT'] %}
+                    {% for item in data['dNAT'] %}
+                      {{item}}
+                    {% endfor %}
+                  {% else %}
+                    Null
+                  {% endif %}
+                </td>
+                  <td>{{data['DNS']}}</td>
+                </tr>
+                {% endfor %}
+              </table>
+              {% endif %}
+              <!-- TABLE VIEW IF SUBMIT -->
+            </form>
+            </br></br>
+          </tr></td>
+        </table>
+      </table>
+      </td></tr>
+      </table>
+    </body>
+</html>
